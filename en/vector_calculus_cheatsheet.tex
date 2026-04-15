@@ -43,7 +43,7 @@
 
 \begin{center}
     \vspace{-1em}
-    {\color{themeblue}\huge\bfseries Vector Calculus Cheat Sheet}\\[0.1em]
+    {\color{themeblue}\huge\bfseries Vector Calculus Cheat Sheet}\\[0.3em]
     {\color{themegray}\small Comprehensive Reference for Engineering, Physics, and Differential Geometry}\\[0.4em]
     {\color{themegray}\footnotesize \textbf{By Roberto León Landeros}}
 \end{center}
@@ -106,6 +106,7 @@ Scalar triple product: $\mathbf{A} \cdot (\mathbf{B} \times \mathbf{C}) = \epsil
 \cheatsheetsubsection{Triple and Quadruple Products}
 \textbf{Scalar Triple:} $[\mathbf{u}, \mathbf{v}, \mathbf{w}] = \mathbf{u} \cdot (\mathbf{v} \times \mathbf{w}) = \begin{vmatrix} u_x & u_y & u_z \\ v_x & v_y & v_z \\ w_x & w_y & w_z \end{vmatrix}$. Oriented volume of parallelepiped. Cyclically invariant: $[\mathbf{u}, \mathbf{v}, \mathbf{w}] = [\mathbf{v}, \mathbf{w}, \mathbf{u}]$.
 
+\vspace{0.8em}
 \begin{center}
 \begin{tikzpicture}[scale=0.7, >=Stealth, x={(-0.6cm,-0.4cm)}, y={(1cm,0cm)}, z={(0cm,1cm)}]
   \coordinate (O) at (0,0,0);
@@ -129,7 +130,8 @@ Scalar triple product: $\mathbf{A} \cdot (\mathbf{B} \times \mathbf{C}) = \epsil
   \draw[->, thick, red] (O) -- (0,3.5,0) node[anchor=north west] {$\mathbf{v}$};
   \draw[->, thick, green!50!black] (O) -- (0,0,3) node[anchor=south] {$\mathbf{w}$};
   
-  \node at (1,1.5,1.25) {\footnotesize Volume $= |[\mathbf{u}, \mathbf{v}, \mathbf{w}]|$};
+  % Flecha que extrae el texto del volumen hacia la derecha
+  \draw[<-, themegray] (1,1.5,1.25) -- (1, 4.2, 1.25) node[anchor=west, text=black] {\footnotesize Volume $= |[\mathbf{u}, \mathbf{v}, \mathbf{w}]|$};
 \end{tikzpicture}
 \end{center}
 
@@ -212,7 +214,7 @@ $x = \rho \cos \phi, \quad y = \rho \sin \phi, \quad z = z$. \\
 $h_\rho = 1, \quad h_\phi = \rho, \quad h_z = 1 \implies dV = \rho \, d\rho \, d\phi \, dz$. \\
 \textbf{Unit Vector Derivatives:} $\frac{\partial \hat{\rho}}{\partial \phi} = \hat{\phi}, \quad \frac{\partial \hat{\phi}}{\partial \phi} = -\hat{\rho}$.
 
-\vspace{-0.4em}
+\vspace{0.6em}
 {\centering
 \begin{tikzpicture}[scale=0.6, >=Stealth]
   \draw[->] (0,0) -- (3,0) node[right] {$y$};
@@ -225,7 +227,7 @@ $h_\rho = 1, \quad h_\phi = \rho, \quad h_z = 1 \implies dV = \rho \, d\rho \, d
   \fill (1.5,2) circle (1.5pt) node[right] {$P(\rho, \phi, z)$};
   
   \draw[fill=themeblue, opacity=0.3] (1.5, -0.5) -- (1.7, -0.5) arc (340:350:1.7) -- (1.5, 2) -- cycle;
-  \node at (2.2, 0.5) {\footnotesize $dV = \rho d\rho d\phi dz$};
+  \node[anchor=west] at (3.2, 0.5) {\footnotesize $dV = \rho d\rho d\phi dz$};
 \end{tikzpicture}\par}
 \vspace{-0.4em}
 
@@ -240,7 +242,7 @@ Physics Convention: $\theta$ is polar (colatitude), $\phi$ is azimuthal (longitu
 $x = r \sin\theta \cos\phi, \quad y = r \sin\theta \sin\phi, \quad z = r \cos\theta$. \\
 $h_r = 1, \quad h_\theta = r, \quad h_\phi = r\sin\theta \implies dV = r^2\sin\theta \, dr \, d\theta \, d\phi$.
 
-\vspace{-0.4em}
+\vspace{0.8em} % Espacio extra arriba para evitar que se pegue al texto
 {\centering
 \begin{tikzpicture}[scale=0.6, >=Stealth]
   \draw[->] (0,0) -- (3,0) node[right] {$y$};
@@ -255,7 +257,9 @@ $h_r = 1, \quad h_\theta = r, \quad h_\phi = r\sin\theta \implies dV = r^2\sin\t
   \fill (1.5,2) circle (1.5pt) node[right] {$P(r, \theta, \phi)$};
   
   \draw[fill=themeblue, opacity=0.3] (1.5, 2) -- (1.7, 2.2) arc (53:60:2.5) -- (1.5, 2) -- cycle;
-  \node at (2.8, 1.5) {\footnotesize $dV = r^2\sin\theta dr d\theta d\phi$};
+  
+  % Texto ubicado a la derecha sin flechas, alineado al borde del eje y
+  \node[anchor=west] at (3.5, 1.5) {\footnotesize $dV = r^2\sin\theta dr d\theta d\phi$};
 \end{tikzpicture}\par}
 \newpage
 \textbf{Unit Vector Transformation Matrix (Cartesian to Spherical):}
