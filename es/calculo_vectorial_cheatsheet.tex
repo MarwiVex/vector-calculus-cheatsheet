@@ -1,0 +1,504 @@
+\documentclass[10pt, landscape, twocolumn]{article}
+
+\usepackage[margin=0.5in, columnsep=0.4in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, calc, shapes.geometric, 3d}
+\usepackage{enumitem}
+\usepackage{mathpazo}
+\usepackage{booktabs}
+\usepackage{multicol}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+\AtBeginDocument{
+  \setlength{\abovedisplayskip}{4pt}
+  \setlength{\belowdisplayskip}{4pt}
+  \setlength{\abovedisplayshortskip}{2pt}
+  \setlength{\belowdisplayshortskip}{2pt}
+}
+
+\definecolor{themeblue}{RGB}{0, 90, 160}
+\definecolor{themegray}{RGB}{80, 80, 80}
+
+\newcommand{\cheatsheetsection}[1]{
+    \vspace{0.8em}
+    {\color{themeblue}\large\bfseries #1} \par
+    \vspace{-0.4em}
+    {\color{themeblue}\rule{\linewidth}{1pt}} \par
+    \vspace{0.3em}
+}
+
+\newcommand{\cheatsheetsubsection}[1]{
+    \vspace{0.5em}
+    {\color{themeblue}\normalsize\bfseries #1} \par
+    \vspace{0.2em}
+}
+
+\begin{document}
+
+\begin{center}
+    \vspace{-1em}
+    {\color{themeblue}\huge\bfseries Guía de Cálculo Vectorial}\\[0.3em]
+    {\color{themegray}\small Referencia Exhaustiva para Ingeniería, Física y Geometría Diferencial}\\[0.4em]
+    {\color{themegray}\footnotesize \textbf{Por Roberto León Landeros}}
+\end{center}
+\vspace{-1em}
+
+\cheatsheetsection{1. Notación Indicial y Álgebra Tensorial}
+
+\cheatsheetsubsection{Convención de Suma de Einstein}
+Los índices repetidos dentro de un término implican la suma sobre ese índice: $a_i b_i = \sum_{i=1}^3 a_i b_i$. Un índice libre aparece una sola vez por término.
+
+\cheatsheetsubsection{Delta de Kronecker ($\delta_{ij}$)}
+Actúa como matriz identidad y como filtro de índices: $\delta_{ij} A_j = A_i$. En $\mathbb{R}^3$, $\delta_{ii} = 3$.
+\[
+\delta_{ij} = \begin{cases} 
+1 & \text{si } i = j \\ 
+0 & \text{si } i \neq j 
+\end{cases}
+\]
+
+\cheatsheetsubsection{Símbolo de Levi-Civita ($\epsilon_{ijk}$)}
+\[
+\epsilon_{ijk} = \begin{cases} 
++1 & \text{permutación par de } (1,2,3) \\ 
+-1 & \text{permutación impar de } (1,2,3) \\ 
+0 & \text{cualquier índice repetido} 
+\end{cases}
+\]
+Definición del producto vectorial (cruz): $(\mathbf{A} \times \mathbf{B})_i = \epsilon_{ijk} A_j B_k$. \\
+Triple producto escalar: $\mathbf{A} \cdot (\mathbf{B} \times \mathbf{C}) = \epsilon_{ijk} A_i B_j C_k$.
+
+\cheatsheetsubsection{Identidades Tensoriales y Simetría}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Identidad Épsilon-Delta:} $\epsilon_{ijk}\epsilon_{imn} = \delta_{jm}\delta_{kn} - \delta_{jn}\delta_{km}$.
+    \item \textbf{Contracciones:} $\epsilon_{ijk}\epsilon_{ijn} = 2\delta_{kn}$, y $\epsilon_{ijk}\epsilon_{ijk} = 6$.
+    \item \textbf{Matriz de Producto Cruz:} $\mathbf{A} \times \mathbf{B} = [\mathbf{A}]_\times \mathbf{B}$, donde $[\mathbf{A}]_\times$ es la matriz antisimétrica de $\mathbf{A}$.
+    \item \textbf{Aniquilación por Simetría:} El doble producto escalar de un tensor simétrico $S_{ij} = S_{ji}$ y un tensor antisimétrico $A_{ij} = -A_{ji}$ es estrictamente cero: $S_{ij}A_{ij} = 0$.
+\end{itemize}
+
+\cheatsheetsection{2. Álgebra Vectorial en $\mathbb{R}^3$}
+
+\cheatsheetsubsection{Productos Escalar y Vectorial}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Producto Escalar (Punto):} $\mathbf{u} \cdot \mathbf{v} = |\mathbf{u}||\mathbf{v}|\cos\theta = u_i v_i$. Mide la proyección paralela. $\mathbf{u} \cdot \mathbf{v} = 0 \implies \mathbf{u} \perp \mathbf{v}$.
+    \item \textbf{Producto Vectorial (Cruz):} $\mathbf{u} \times \mathbf{v} = \mathbf{n} |\mathbf{u}||\mathbf{v}|\sin\theta = \begin{vmatrix} \hat{i} & \hat{j} & \hat{k} \\ u_x & u_y & u_z \\ v_x & v_y & v_z \end{vmatrix}$. El resultado es ortogonal a $\mathbf{u}$ y $\mathbf{v}$. Su magnitud es el área del paralelogramo.
+\end{itemize}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.8, >=Stealth]
+    \draw[->, thick] (0,0) -- (2.5,0.5) node[right] {$\mathbf{v}$};
+    \draw[->, thick] (0,0) -- (1,2) node[above left] {$\mathbf{u}$};
+    \draw[dashed] (1,2) -- (3.5,2.5) -- (2.5,0.5);
+    \fill[themeblue, opacity=0.15] (0,0) -- (2.5,0.5) -- (3.5,2.5) -- (1,2) -- cycle;
+    \draw[->, themeblue, ultra thick] (0,0) -- (0,2.5) node[left] {$\mathbf{u} \times \mathbf{v}$};
+    \draw (0.5,0.1) arc (10:65:0.5);
+    \node at (0.7,0.5) {$\theta$};
+    \node at (1.8,1.2) {\footnotesize Área $= |\mathbf{u} \times \mathbf{v}|$};
+\end{tikzpicture}
+\end{center}
+
+\cheatsheetsubsection{Productos Triples y Cuádruples}
+\textbf{Triple Producto Escalar:} $[\mathbf{u}, \mathbf{v}, \mathbf{w}] = \mathbf{u} \cdot (\mathbf{v} \times \mathbf{w}) = \begin{vmatrix} u_x & u_y & u_z \\ v_x & v_y & v_z \\ w_x & w_y & w_z \end{vmatrix}$. Volumen orientado del paralelepípedo. Es cíclicamente invariante: $[\mathbf{u}, \mathbf{v}, \mathbf{w}] = [\mathbf{v}, \mathbf{w}, \mathbf{u}]$.
+
+\vspace{0.8em}
+\begin{center}
+\begin{tikzpicture}[scale=0.7, >=Stealth, x={(-0.6cm,-0.4cm)}, y={(1cm,0cm)}, z={(0cm,1cm)}]
+  \coordinate (O) at (0,0,0);
+  \coordinate (A) at (2,0,0);
+  \coordinate (B) at (0,3,0);
+  \coordinate (C) at (0,0,2.5);
+  \coordinate (A1) at (2,3,0);
+  \coordinate (B1) at (0,3,2.5);
+  \coordinate (C1) at (2,0,2.5);
+  \coordinate (D) at (2,3,2.5);
+  
+  \draw[dashed, themegray] (O) -- (A);
+  \draw[dashed, themegray] (O) -- (B);
+  \draw[dashed, themegray] (O) -- (C);
+  
+  \draw[thick] (A) -- (A1) -- (B) -- (B1) -- (C) -- (C1) -- cycle;
+  \draw[thick] (A1) -- (D) -- (B1);
+  \draw[thick] (C1) -- (D);
+  
+  \draw[->, thick, themeblue] (O) -- (2.5,0,0) node[anchor=north east] {$\mathbf{u}$};
+  \draw[->, thick, red] (O) -- (0,3.5,0) node[anchor=north west] {$\mathbf{v}$};
+  \draw[->, thick, green!50!black] (O) -- (0,0,3) node[anchor=south] {$\mathbf{w}$};
+  
+  \draw[<-, themegray] (1,1.5,1.25) -- (1, 4.2, 1.25) node[anchor=west, text=black] {\footnotesize Volumen $= |[\mathbf{u}, \mathbf{v}, \mathbf{w}]|$};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Triple Producto Vectorial:} $\mathbf{A} \times (\mathbf{B} \times \mathbf{C}) = \mathbf{B}(\mathbf{A} \cdot \mathbf{C}) - \mathbf{C}(\mathbf{A} \cdot \mathbf{B})$ (Regla BAC-CAB).
+    \item \textbf{Identidad de Jacobi:} $\mathbf{A} \times (\mathbf{B} \times \mathbf{C}) + \mathbf{B} \times (\mathbf{C} \times \mathbf{A}) + \mathbf{C} \times (\mathbf{A} \times \mathbf{B}) = \mathbf{0}$.
+    \item \textbf{Identidad de Lagrange:} $|\mathbf{A} \times \mathbf{B}|^2 = |\mathbf{A}|^2|\mathbf{B}|^2 - (\mathbf{A} \cdot \mathbf{B})^2$.
+    \item \textbf{Cuádruple Producto Escalar:} $(\mathbf{A} \times \mathbf{B}) \cdot (\mathbf{C} \times \mathbf{D}) = (\mathbf{A} \cdot \mathbf{C})(\mathbf{B} \cdot \mathbf{D}) - (\mathbf{A} \cdot \mathbf{D})(\mathbf{B} \cdot \mathbf{C})$.
+\end{itemize}
+
+\cheatsheetsubsection{Geometría Analítica: Rectas, Planos, Superficies}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Recta (Paramétrica):} $\mathbf{r}(t) = \mathbf{r}_0 + t\mathbf{v}$.
+    \item \textbf{Recta (Simétrica):} $\frac{x-x_0}{v_x} = \frac{y-y_0}{v_y} = \frac{z-z_0}{v_z}$.
+    \item \textbf{Plano (Forma normal):} $\mathbf{n} \cdot (\mathbf{r} - \mathbf{r}_0) = 0 \implies a(x-x_0) + b(y-y_0) + c(z-z_0) = 0$.
+    \item \textbf{Distancia del Punto $P$ al Plano:} $D = \frac{|ax_p + by_p + cz_p - d|}{\sqrt{a^2+b^2+c^2}}$.
+\end{itemize}
+
+\newpage
+\textbf{Formas Base de Superficies Cuádricas:}\\
+Elipsoide: $\frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1$. Paraboloide: $z = \frac{x^2}{a^2} + \frac{y^2}{b^2}$.\\
+Hiperboloide (1 hoja): $\frac{x^2}{a^2} + \frac{y^2}{b^2} - \frac{z^2}{c^2} = 1$. Cono: $z^2 = \frac{x^2}{a^2} + \frac{y^2}{b^2}$.
+
+\cheatsheetsection{3. Geometría Diferencial}
+
+\cheatsheetsubsection{Curvas y el Triedro de Frenet-Serret}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Longitud de Arco:} $s(t) = \int_{t_0}^t |\mathbf{r}'(u)| du \implies ds = |\mathbf{r}'(t)|dt$.
+    \item \textbf{Tangente:} $\mathbf{T} = \frac{\mathbf{r}'}{|\mathbf{r}'|}$. \quad \textbf{Normal:} $\mathbf{N} = \frac{\mathbf{T}'}{|\mathbf{T}'|}$. \quad \textbf{Binormal:} $\mathbf{B} = \mathbf{T} \times \mathbf{N}$.
+    \item \textbf{Curvatura ($\kappa$):} Mide la desviación respecto a una línea recta. \\ $\kappa = \frac{|\mathbf{T}'|}{|\mathbf{r}'|} = \frac{|\mathbf{r}' \times \mathbf{r}''|}{|\mathbf{r}'|^3}$. Radio de curvatura: $R = \frac{1}{\kappa}$.
+    \item \textbf{Círculo Osculador:} Centro de curvatura en $\mathbf{c} = \mathbf{r}(s) + \frac{1}{\kappa}\mathbf{N}$.
+    \item \textbf{Torsión ($\tau$):} Mide la desviación respecto al plano osculador.
+\end{itemize}
+\[
+\tau = \frac{(\mathbf{r}' \times \mathbf{r}'') \cdot \mathbf{r}'''}{|\mathbf{r}' \times \mathbf{r}''|^2}
+\]
+
+\textbf{Fórmulas de Frenet-Serret:}
+\begin{equation*}
+\begin{bmatrix} \mathbf{T}' \\ \mathbf{N}' \\ \mathbf{B}' \end{bmatrix} = |\mathbf{r}'| \begin{bmatrix} 0 & \kappa & 0 \\ -\kappa & 0 & \tau \\ 0 & -\tau & 0 \end{bmatrix} \begin{bmatrix} \mathbf{T} \\ \mathbf{N} \\ \mathbf{B} \end{bmatrix}
+\end{equation*}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.2, >=Stealth]
+    \draw[thick, themegray, domain=0:4, samples=100] plot ({cos(\x*100)}, {sin(\x*100)}, {\x*0.5});
+    \coordinate (P) at ({cos(200)}, {sin(200)}, {2*0.5});
+    \draw[->, themeblue, thick] (P) -- ++({-sin(200)}, {cos(200)}, 0.5) node[right] {$\mathbf{T}$};
+    \draw[->, red, thick] (P) -- ++({-cos(200)}, {-sin(200)}, 0) node[below] {$\mathbf{N}$};
+    \draw[->, green!50!black, thick] (P) -- ++({sin(200)*0.5}, {-cos(200)*0.5}, 1) node[above] {$\mathbf{B}$};
+    \fill (P) circle (1.5pt);
+\end{tikzpicture}
+\end{center}
+
+\vspace{-2}
+\cheatsheetsubsection{Fundamentos de Geometría de Superficies}
+Para una superficie parametrizada $\mathbf{r}(u,v)$:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Vector Normal:} $\mathbf{n} = \frac{\mathbf{r}_u \times \mathbf{r}_v}{|\mathbf{r}_u \times \mathbf{r}_v|}$.
+    \item \textbf{Primera Forma Fundamental (Métrica):} $I = E\,du^2 + 2F\,du\,dv + G\,dv^2$. \\
+    $E = \mathbf{r}_u \cdot \mathbf{r}_u$, $F = \mathbf{r}_u \cdot \mathbf{r}_v$, $G = \mathbf{r}_v \cdot \mathbf{r}_v$. \\
+    Elemento de área: $dS = \sqrt{EG - F^2} \, du \, dv = |\mathbf{r}_u \times \mathbf{r}_v| \, du \, dv$.
+    \item \textbf{Segunda Forma Fundamental:} $II = L\,du^2 + 2M\,du\,dv + N\,dv^2$. \\
+    $L = \mathbf{r}_{uu} \cdot \mathbf{n}$, $M = \mathbf{r}_{uv} \cdot \mathbf{n}$, $N = \mathbf{r}_{vv} \cdot \mathbf{n}$.
+    \item \textbf{Curvatura Gaussiana:} $K = \frac{LN - M^2}{EG - F^2}$. 
+    \item \textbf{Theorema Egregium de Gauss:} La curvatura Gaussiana $K$ es una propiedad intrínseca; permanece invariante bajo isometrías locales (flexión sin estiramiento).
+    \item \textbf{Curvatura Media:} $H = \frac{EN + GL - 2FM}{2(EG - F^2)}$.
+    \item \textbf{Geodésicas:} Curvas de la trayectoria más corta sobre una superficie donde la aceleración es estrictamente normal a la superficie: $\mathbf{r}'' \times \mathbf{n} = \mathbf{0}$.
+\end{itemize}
+
+\cheatsheetsection{4. Sistemas de Coordenadas y Transformaciones}
+
+\cheatsheetsubsection{Coordenadas Curvilíneas Ortogonales Generales}
+Coordenadas $(q_1, q_2, q_3)$. Vector posición $\mathbf{r}(q_1, q_2, q_3)$.
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Factores de Escala:} $h_i = \left| \frac{\partial \mathbf{r}}{\partial q_i} \right|$. Métrica: $ds^2 = h_1^2 dq_1^2 + h_2^2 dq_2^2 + h_3^2 dq_3^2$.
+    \item \textbf{Elemento de volumen:} $dV = h_1 h_2 h_3 \, dq_1 \, dq_2 \, dq_3$.
+    \item \textbf{Matriz Jacobiana ($J$):} $J_{ij} = \frac{\partial x_i}{\partial q_j}$. $dV = |\det(J)| \, dq_1 \, dq_2 \, dq_3$.
+\end{itemize}
+
+\cheatsheetsubsection{Coordenadas Cilíndricas $(\rho, \phi, z)$}
+$x = \rho \cos \phi, \quad y = \rho \sin \phi, \quad z = z$. \\
+$h_\rho = 1, \quad h_\phi = \rho, \quad h_z = 1 \implies dV = \rho \, d\rho \, d\phi \, dz$. \\
+\textbf{Derivadas de los Vectores Unitarios:} $\frac{\partial \hat{\rho}}{\partial \phi} = \hat{\phi}, \quad \frac{\partial \hat{\phi}}{\partial \phi} = -\hat{\rho}$.
+
+\vspace{0.6em}
+{\centering
+\begin{tikzpicture}[scale=0.6, >=Stealth]
+  \draw[->] (0,0) -- (3,0) node[right] {$y$};
+  \draw[->] (0,0) -- (-1.5,-1.5) node[below left] {$x$};
+  \draw[->] (0,0) -- (0,3) node[above] {$z$};
+  \draw[thick, themeblue] (0,0) -- (1.5,-0.5) node[midway, below] {$\rho$};
+  \draw[thick, red] (1.5,-0.5) -- (1.5, 2) node[midway, right] {$z$};
+  \draw[->, dashed] (-0.8,-0.8) arc (225:340:1.1);
+  \node at (0.3,-1.2) {$\phi$};
+  \fill (1.5,2) circle (1.5pt) node[right] {$P(\rho, \phi, z)$};
+  
+  \draw[fill=themeblue, opacity=0.3] (1.5, -0.5) -- (1.7, -0.5) arc (340:350:1.7) -- (1.5, 2) -- cycle;
+  \node[anchor=west] at (3.2, 0.5) {\footnotesize $dV = \rho d\rho d\phi dz$};
+\end{tikzpicture}\par}
+\vspace{-0.4em}
+
+\textbf{Matriz de Transformación de Vectores Unitarios (Cartesianas a Cilíndricas):}
+\vspace{0.2em}
+{\centering
+$ \begin{bmatrix} \hat{\rho} \\ \hat{\phi} \\ \hat{z} \end{bmatrix} = \begin{bmatrix} \cos\phi & \sin\phi & 0 \\ -\sin\phi & \cos\phi & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} \hat{i} \\ \hat{j} \\ \hat{k} \end{bmatrix} $\par}
+\vspace{0.6em}
+
+\cheatsheetsubsection{Coordenadas Esféricas $(r, \theta, \phi)$}
+Convención de Física: $\theta$ es el ángulo polar (colatitud), $\phi$ es el ángulo azimutal (longitud). \\
+$x = r \sin\theta \cos\phi, \quad y = r \sin\theta \sin\phi, \quad z = r \cos\theta$. \\
+$h_r = 1, \quad h_\theta = r, \quad h_\phi = r\sin\theta \implies dV = r^2\sin\theta \, dr \, d\theta \, d\phi$.
+
+\vspace{0.8em} 
+{\centering
+\begin{tikzpicture}[scale=0.6, >=Stealth]
+  \draw[->] (0,0) -- (3,0) node[right] {$y$};
+  \draw[->] (0,0) -- (-1.5,-1.5) node[below left] {$x$};
+  \draw[->] (0,0) -- (0,3) node[above] {$z$};
+  \draw[thick, themeblue] (0,0) -- (1.5, 2) node[midway, above left] {$r$};
+  \draw[dashed] (1.5, 2) -- (1.5, -0.5) -- (0,0);
+  \draw[->, dashed] (0, 1.5) arc (90:53:1.5);
+  \node at (0.4, 1.8) {$\theta$};
+  \draw[->, dashed] (-0.8,-0.8) arc (225:340:1.1);
+  \node at (0.3,-1.2) {$\phi$};
+  \fill (1.5,2) circle (1.5pt) node[right] {$P(r, \theta, \phi)$};
+  
+  \draw[fill=themeblue, opacity=0.3] (1.5, 2) -- (1.7, 2.2) arc (53:60:2.5) -- (1.5, 2) -- cycle;
+  
+  \node[anchor=west] at (3.5, 1.5) {\footnotesize $dV = r^2\sin\theta dr d\theta d\phi$};
+\end{tikzpicture}\par}
+
+\textbf{Matriz de Transformación de Vectores Unitarios (Cartesianas a Esféricas):}
+\vspace{0.2em}
+{\centering
+$ \begin{bmatrix} \hat{r} \\ \hat{\theta} \\ \hat{\phi} \end{bmatrix} = \begin{bmatrix} \sin\theta\cos\phi & \sin\theta\sin\phi & \cos\theta \\ \cos\theta\cos\phi & \cos\theta\sin\phi & -\sin\theta \\ -\sin\phi & \cos\phi & 0 \end{bmatrix} \begin{bmatrix} \hat{i} \\ \hat{j} \\ \hat{k} \end{bmatrix} $\par}
+\vspace{0.2em}\
+{\footnotesize \textbf{Nota:} Para convertir de Esféricas a Cartesianas, utilice la transpuesta de la matriz anterior, ya que es ortogonal ($Q^{-1} = Q^T$).}
+
+\cheatsheetsection{5. Cálculo Diferencial y Optimización}
+
+\cheatsheetsubsection{Aproximación Lineal y Planos Tangentes}
+\textbf{Diferencial Total:} $df = \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy + \frac{\partial f}{\partial z} dz = \nabla f \cdot d\mathbf{r}$. \\
+\textbf{Plano Tangente a $F(x,y,z)=c$:} $\nabla F(x_0, y_0, z_0) \cdot \langle x-x_0, y-y_0, z-z_0 \rangle = 0$. \\
+\textbf{Serie de Taylor (2do Orden):} $f(x,y) \approx f(a,b) + f_x(x-a) + f_y(y-b) + \frac{1}{2!}\left[ f_{xx}(x-a)^2 + 2f_{xy}(x-a)(y-b) + f_{yy}(y-b)^2 \right]$.
+
+\cheatsheetsubsection{Derivada Direccional y Regla del Triple Producto}
+\textbf{Derivada Direccional:} $D_{\mathbf{u}}f = \nabla f \cdot \mathbf{u}$. Tasa de cambio en la dirección del vector unitario $\mathbf{u}$. La tasa de cambio máxima es $|\nabla f|$. \\
+\textbf{Regla del Triple Producto (Termodinámica):} Si $F(x,y,z)=0$, entonces $\left(\frac{\partial x}{\partial y}\right)_z \left(\frac{\partial y}{\partial z}\right)_x \left(\frac{\partial z}{\partial x}\right)_y = -1$.
+
+\cheatsheetsubsection{Optimización: Hessiano y Lagrange}
+\textbf{Matriz Hessiana ($H$):} $H_{ij} = \frac{\partial^2 f}{\partial x_i \partial x_j}$. \\
+Para $f(x,y)$, Discriminante $D = \det(H) = f_{xx}f_{yy} - (f_{xy})^2$. \\
+$D>0, f_{xx}>0 \implies$ Mínimo. \quad $D>0, f_{xx}<0 \implies$ Máximo. \quad $D<0 \implies$ Punto de silla. \\
+\textbf{Multiplicadores de Lagrange:} Optimizar $f(\mathbf{r})$ sujeto a la restricción $g(\mathbf{r})=k$: $\nabla f = \lambda \nabla g$. Para dos restricciones $g_1, g_2$: $\nabla f = \lambda_1 \nabla g_1 + \lambda_2 \nabla g_2$. \\
+\textbf{Método de Mínimos Cuadrados:} Optimizar $y = \beta_0 + \beta_1 x$ minimizando $E = \sum (y_i - (\beta_0 + \beta_1 x_i))^2$. La pendiente está dada por $\beta_1 = \frac{n\sum x_iy_i - (\sum x_i)(\sum y_i)}{n\sum x_i^2 - (\sum x_i)^2}$.
+
+\cheatsheetsection{6. Operadores Diferenciales ($\nabla$)}
+
+\cheatsheetsubsection{Coordenadas Cartesianas}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Gradiente:} $\nabla f = \frac{\partial f}{\partial x}\hat{i} + \frac{\partial f}{\partial y}\hat{j} + \frac{\partial f}{\partial z}\hat{k}$
+    \item \textbf{Divergencia:} $\nabla \cdot \mathbf{A} = \frac{\partial A_x}{\partial x} + \frac{\partial A_y}{\partial y} + \frac{\partial A_z}{\partial z}$
+    \item \textbf{Rotacional:} $\nabla \times \mathbf{A} = \left(\frac{\partial A_z}{\partial y} - \frac{\partial A_y}{\partial z}\right)\hat{i} + \left(\frac{\partial A_x}{\partial z} - \frac{\partial A_z}{\partial x}\right)\hat{j} + \left(\frac{\partial A_y}{\partial x} - \frac{\partial A_x}{\partial y}\right)\hat{k}$
+    \item \textbf{Laplaciano:} $\nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2} + \frac{\partial^2 f}{\partial z^2}$
+\end{itemize}
+\vspace{0.3em}
+\textbf{Laplaciano Vectorial:} $\nabla^2 \mathbf{A} = \nabla(\nabla \cdot \mathbf{A}) - \nabla \times (\nabla \times \mathbf{A})$. Crítico para la dinámica de fluidos y el electromagnetismo.\\
+\textbf{Derivada Material (Lagrangiana):} $\frac{D\mathbf{u}}{Dt} = \frac{\partial \mathbf{u}}{\partial t} + (\mathbf{u} \cdot \nabla)\mathbf{u}$. Tasa de cambio observada por una parcela de fluido en movimiento.
+
+\cheatsheetsubsection{Coordenadas Polares ($r, \theta$)}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Gradiente:} $\nabla f = \frac{\partial f}{\partial r}\hat{r} + \frac{1}{r}\frac{\partial f}{\partial \theta}\hat{\theta}$
+    \item \textbf{Divergencia:} $\nabla \cdot \mathbf{A} = \frac{1}{r}\frac{\partial}{\partial r}(r A_r) + \frac{1}{r}\frac{\partial A_\theta}{\partial \theta}$
+    \item \textbf{Rotacional:} $\nabla \times \mathbf{A} = \frac{1}{r}\left( \frac{\partial}{\partial r}(r A_\theta) - \frac{\partial A_r}{\partial \theta} \right)\hat{k}$
+    \item \textbf{Laplaciano:} $\nabla^2 f = \frac{1}{r}\frac{\partial}{\partial r}\left(r \frac{\partial f}{\partial r}\right) + \frac{1}{r^2}\frac{\partial^2 f}{\partial \theta^2}$
+\end{itemize}
+
+\cheatsheetsubsection{Coordenadas Cilíndricas ($\rho, \phi, z$)}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Gradiente:} $\nabla f = \frac{\partial f}{\partial \rho}\hat{\rho} + \frac{1}{\rho}\frac{\partial f}{\partial \phi}\hat{\phi} + \frac{\partial f}{\partial z}\hat{z}$
+    \item \textbf{Divergencia:} $\nabla \cdot \mathbf{A} = \frac{1}{\rho}\frac{\partial}{\partial \rho}(\rho A_\rho) + \frac{1}{\rho}\frac{\partial A_\phi}{\partial \phi} + \frac{\partial A_z}{\partial z}$
+    \item \textbf{Rotacional:} $\nabla \times \mathbf{A} = \left( \frac{1}{\rho}\frac{\partial A_z}{\partial \phi} - \frac{\partial A_\phi}{\partial z} \right)\hat{\rho} + \left( \frac{\partial A_\rho}{\partial z} - \frac{\partial A_z}{\partial \rho} \right)\hat{\phi} + \frac{1}{\rho}\left( \frac{\partial}{\partial \rho}(\rho A_\phi) - \frac{\partial A_\rho}{\partial \phi} \right)\hat{z}$
+    \item \textbf{Laplaciano:} $\nabla^2 f = \frac{1}{\rho}\frac{\partial}{\partial \rho}\left(\rho \frac{\partial f}{\partial \rho}\right) + \frac{1}{\rho^2}\frac{\partial^2 f}{\partial \phi^2} + \frac{\partial^2 f}{\partial z^2}$
+\end{itemize}
+
+\cheatsheetsubsection{Coordenadas Esféricas ($r, \theta, \phi$)}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Gradiente:} $\nabla f = \frac{\partial f}{\partial r}\hat{r} + \frac{1}{r}\frac{\partial f}{\partial \theta}\hat{\theta} + \frac{1}{r\sin\theta}\frac{\partial f}{\partial \phi}\hat{\phi}$
+    \item \textbf{Divergencia:} $\nabla \cdot \mathbf{A} = \frac{1}{r^2}\frac{\partial}{\partial r}(r^2 A_r) + \frac{1}{r\sin\theta}\frac{\partial}{\partial \theta}(\sin\theta A_\theta) + \frac{1}{r\sin\theta}\frac{\partial A_\phi}{\partial \phi}$
+    \item \textbf{Rotacional:} $\nabla \times \mathbf{A} = \frac{1}{r\sin\theta}\left( \frac{\partial}{\partial \theta}(A_\phi \sin\theta) - \frac{\partial A_\theta}{\partial \phi} \right)\hat{r} + \frac{1}{r}\left( \frac{1}{\sin\theta}\frac{\partial A_r}{\partial \phi} - \frac{\partial}{\partial r}(r A_\phi) \right)\hat{\theta} + \frac{1}{r}\left( \frac{\partial}{\partial r}(r A_\theta) - \frac{\partial A_r}{\partial \theta} \right)\hat{\phi}$
+    \item \textbf{Laplaciano:} $\nabla^2 f = \frac{1}{r^2}\frac{\partial}{\partial r}\left(r^2 \frac{\partial f}{\partial r}\right) + \frac{1}{r^2\sin\theta}\frac{\partial}{\partial \theta}\left(\sin\theta \frac{\partial f}{\partial \theta}\right) + \frac{1}{r^2\sin^2\theta}\frac{\partial^2 f}{\partial \phi^2}$
+\end{itemize}
+
+\newpage
+\cheatsheetsection{7. Identidades Vectoriales Avanzadas}
+\cheatsheetsubsection{Expansión de Primer Orden}
+\begin{itemize}[leftmargin=*, nosep]
+    \item $\nabla (fg) = f \nabla g + g \nabla f$
+    \item $\nabla (\mathbf{A} \cdot \mathbf{B}) = (\mathbf{A} \cdot \nabla)\mathbf{B} + (\mathbf{B} \cdot \nabla)\mathbf{A} + \mathbf{A} \times (\nabla \times \mathbf{B}) + \mathbf{B} \times (\nabla \times \mathbf{A})$
+    \item $\nabla \cdot (f \mathbf{A}) = f (\nabla \cdot \mathbf{A}) + \mathbf{A} \cdot (\nabla f)$
+    \item $\nabla \cdot (\mathbf{A} \times \mathbf{B}) = \mathbf{B} \cdot (\nabla \times \mathbf{A}) - \mathbf{A} \cdot (\nabla \times \mathbf{B})$
+    \item $\nabla \times (f \mathbf{A}) = f (\nabla \times \mathbf{A}) + (\nabla f) \times \mathbf{A}$
+    \item $\nabla \times (\mathbf{A} \times \mathbf{B}) = \mathbf{A}(\nabla \cdot \mathbf{B}) - \mathbf{B}(\nabla \cdot \mathbf{A}) + (\mathbf{B} \cdot \nabla)\mathbf{A} - (\mathbf{A} \cdot \nabla)\mathbf{B}$
+\end{itemize}
+
+\cheatsheetsubsection{Nulidades de Segundo Orden (Aniquilaciones)}
+\begin{tabularx}{\linewidth}{|p{0.4\linewidth}|X|}
+\hline
+\textbf{Identidad} & \textbf{Significado Físico} \\ \hline
+$\nabla \times (\nabla f) = \mathbf{0}$ & El rotacional de un gradiente es cero. Los gradientes son irrotacionales. \\ \hline
+$\nabla \cdot (\nabla \times \mathbf{A}) = 0$ & La divergencia de un rotacional es cero. Los rotacionales son solenoidales. \\ \hline
+\end{tabularx}
+$\nabla \cdot (\nabla f) = \nabla^2 f$ (Laplaciano Escalar). \\
+$\nabla \times (\nabla \times \mathbf{A}) = \nabla(\nabla \cdot \mathbf{A}) - \nabla^2 \mathbf{A}$.
+
+\cheatsheetsubsection{Descomposición de Helmholtz y Poincaré}
+Cualquier campo vectorial $\mathbf{F}$ suave y de decaimiento rápido puede dividirse en: $\mathbf{F} = -\nabla \Phi + \nabla \times \mathbf{A}$. \\
+$\Phi$ es el potencial escalar (fuentes/sumideros). $\mathbf{A}$ es el potencial vectorial (vórtices). \\
+\textbf{Lema de Poincaré:} En una región abierta simplemente conexa, un campo $\mathbf{F}$ es conservativo ($\mathbf{F} = \nabla \Phi$) si y solo si es irrotacional ($\nabla \times \mathbf{F} = \mathbf{0}$).
+
+\cheatsheetsection{8. Teoremas Integrales y Física}
+
+\cheatsheetsubsection{Integrales de Línea y Superficie}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Trabajo / Circulación:} $W = \int_C \mathbf{F} \cdot d\mathbf{r} = \int_a^b \mathbf{F}(\mathbf{r}(t)) \cdot \mathbf{r}'(t) dt$.
+    \item \textbf{Teorema del Trabajo y la Energía:} $W = \Delta T = \frac{1}{2}m|\mathbf{v}_f|^2 - \frac{1}{2}m|\mathbf{v}_i|^2$.
+    \item \textbf{Teorema Fundamental de las Integrales de Línea:} $\int_C \nabla f \cdot d\mathbf{r} = f(\mathbf{r}(b)) - f(\mathbf{r}(a))$. Válido para campos conservativos ($\nabla \times \mathbf{F} = \mathbf{0}$).
+    \item \textbf{Flujo Superficial:} $\Phi = \iint_S \mathbf{F} \cdot d\mathbf{S} = \iint_S \mathbf{F} \cdot (\mathbf{r}_u \times \mathbf{r}_v) \, du \, dv$.
+\end{itemize}
+
+\cheatsheetsubsection{Los Tres Grandes Teoremas}
+\textbf{Teorema de Green (2D):} Relaciona una integral de línea con una integral doble. \\
+$\oint_C (P\,dx + Q\,dy) = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) dA$. \\
+Área encerrada: $A = \frac{1}{2} \oint_C (x\,dy - y\,dx)$. \\
+\textbf{Regiones Múltiplemente Conexas (Agujeros):} La frontera exterior debe estar orientada en sentido antihorario, y las fronteras interiores en sentido horario.
+
+\textbf{Teorema de Stokes (Superficie 3D a Frontera):} 
+$\iint_S (\nabla \times \mathbf{F}) \cdot d\mathbf{S} = \oint_{\partial S} \mathbf{F} \cdot d\mathbf{r}$.
+\begin{center}
+\begin{tikzpicture}[scale=0.7, >=Stealth]
+    \draw[thick, fill=themeblue, opacity=0.1] (0,0) ellipse (2 and 0.6);
+    \draw[thick, ->] (2,0) arc (0:180:2 and 0.6) node[above left] {$\partial S$};
+    \draw[thick] (-2,0) arc (180:360:2 and 0.6);
+    \draw[thick, themegray] (2,0) to [bend right=60] (0,2) to [bend right=60] (-2,0);
+    \draw[->, themeblue, ultra thick] (0,1.2) -- (0,2.5) node[right] {$\mathbf{n}$};
+    \node at (0,0.8) {$S$};
+    \draw[->, red, thick] (1.5, 0.4) arc (0:270:0.3 and 0.1);
+    \node[red] at (2,0.6) {$\nabla \times \mathbf{F}$};
+\end{tikzpicture}
+\end{center}
+
+\textbf{Teorema de la Divergencia de Gauss (Volumen 3D a Superficie):} \\
+$\iiint_V (\nabla \cdot \mathbf{F}) \, dV = \oiint_{\partial V} \mathbf{F} \cdot d\mathbf{S}$.
+
+\cheatsheetsubsection{Aplicaciones en Física y Transporte}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Regla Integral de Leibniz (Teorema de Transporte de Reynolds):} Para un volumen en deformación $V(t)$: \\
+    $\frac{d}{dt} \iiint_{V(t)} f \, dV = \iiint_{V(t)} \frac{\partial f}{\partial t} \, dV + \oiint_{\partial V(t)} f(\mathbf{v} \cdot \mathbf{n}) \, dS$.
+    \item \textbf{Ecuación de Continuidad (Conservación de la Masa):} $\frac{\partial \rho}{\partial t} + \nabla \cdot (\rho \mathbf{v}) = 0$.
+    \item \textbf{Vorticidad:} $\boldsymbol{\omega} = \nabla \times \mathbf{u}$. Representa el giro local de una parcela de fluido.
+\end{itemize}
+
+\textbf{Ecuaciones de Maxwell (Vacío):}
+\begin{enumerate}[label=\arabic*., leftmargin=*, nosep]
+    \item Ley de Gauss: $\nabla \cdot \mathbf{E} = \rho / \varepsilon_0$
+    \item Ley de Gauss para el Magnetismo: $\nabla \cdot \mathbf{B} = 0$
+    \item Ley de Faraday: $\nabla \times \mathbf{E} = -\frac{\partial \mathbf{B}}{\partial t}$
+    \item Ley de Ampère-Maxwell: $\nabla \times \mathbf{B} = \mu_0 \mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}$
+\end{enumerate}
+\textbf{Derivación de la Ecuación de Onda:} $\nabla \times (\nabla \times \mathbf{E}) \implies \nabla^2 \mathbf{E} = \mu_0 \varepsilon_0 \frac{\partial^2 \mathbf{E}}{\partial t^2} = \frac{1}{c^2} \frac{\partial^2 \mathbf{E}}{\partial t^2}$.
+
+\cheatsheetsection{9. Intuición Práctica y Flujos de Trabajo}
+
+\cheatsheetsubsection{Guía de Selección de Teoremas}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Teorema de Green:} Úselo al trabajar con una curva cerrada estrictamente en un plano 2D. Excelente para calcular áreas encerradas.
+    \item \textbf{Teorema de Stokes:} Úselo al calcular el flujo de un rotacional ($\nabla \times \mathbf{F}$) a través de una superficie abierta, O para convertir una integral de superficie compleja en una integral de línea más simple a lo largo de la frontera $\partial S$.
+    \item \textbf{Teorema de Gauss (Divergencia):} Úselo al evaluar el flujo ($\nabla \cdot \mathbf{F}$) a través de una superficie estrictamente cerrada (como una esfera o caja) para convertirlo en una integral de volumen.
+\end{itemize}
+
+\newpage
+\cheatsheetsubsection{Estrategias de Sistemas de Coordenadas}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Cilíndricas:} Óptimo para simetrías alrededor de un eje (cables, cilindros, cuerpos en rotación). Busque el término $x^2 + y^2$.
+    \item \textbf{Esféricas:} Óptimo para simetrías puntuales que irradian desde un origen (esferas, conos). Busque el término $x^2 + y^2 + z^2$.
+\end{itemize}
+
+\cheatsheetsubsection{Reconocimiento de Campos Conservativos ($\mathbf{F}$)}
+Condiciones equivalentes en un dominio simplemente conexo:
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Irrotacional:} $\nabla \times \mathbf{F} = \mathbf{0}$.
+    \item \textbf{Potencial Escalar:} $\mathbf{F} = \nabla f$.
+    \item \textbf{Independencia de la Trayectoria:} $\int_C \mathbf{F} \cdot d\mathbf{r}$ depende únicamente de los puntos finales.
+    \item \textbf{Circulación Cero:} $\oint_C \mathbf{F} \cdot d\mathbf{r} = 0$ para cualquier bucle cerrado.
+\end{itemize}
+En la práctica, si $\nabla \times \mathbf{F} = \mathbf{0}$, puede encontrar un potencial $f$ y usar el Teorema Fundamental: $W = f(B) - f(A)$, evitando por completo el cálculo de la integral de línea.
+
+\cheatsheetsection{10. \textbf{NÚCLEO}: Fórmulas Rápidas para Exámenes}
+\vspace{0.2em}
+\renewcommand{\arraystretch}{1.25}
+
+{\color{themeblue}\normalsize\bfseries A. Operadores Diferenciales y Vector Posición} \par
+\vspace{-0.2em}
+\begin{tabularx}{\linewidth}{|X|}
+\hline
+\textbf{1.} $\nabla f = \langle f_x, f_y, f_z \rangle$ (Gradiente: normal a las curvas de nivel. Derivada direccional máxima $D_{\mathbf{u}}f = |\nabla f|$) \\
+\textbf{2.} $\nabla \cdot \mathbf{F} = P_x + Q_y + R_z$ (Divergencia: densidad de flujo de fuente/sumidero en un punto) \\
+\textbf{3.} $\nabla \times \mathbf{F} = \langle R_y-Q_z, P_z-R_x, Q_x-P_y \rangle$ (Rotacional: eje y magnitud de la rotación local) \\
+\textbf{4.} $\nabla^2 f = \nabla \cdot \nabla f = f_{xx} + f_{yy} + f_{zz}$ (Laplaciano: concavity/difusión de un campo escalar) \\
+\textbf{5.} Vector Posición $\mathbf{r} = \langle x, y, z \rangle$ con magnitud $r = |\mathbf{r}| = \sqrt{x^2+y^2+z^2}$ \\
+\textbf{6.} $\nabla \cdot \mathbf{r} = 3 \quad \text{y} \quad \nabla \times \mathbf{r} = \mathbf{0}$ (Los campos radiales son irrotacionales) \\
+\textbf{7.} $\nabla (r^n) = n r^{n-2} \mathbf{r} \implies \nabla(r) = \hat{r}, \quad \nabla\left(\frac{1}{r}\right) = -\frac{\mathbf{r}}{r^3}, \quad \nabla^2\left(\frac{1}{r}\right) = 0 \text{ } (r \neq 0)$ \\
+\hline
+\end{tabularx}
+
+\vspace{0.6em}
+{\color{themeblue}\normalsize\bfseries B. Identidades Vectoriales Clave} \par
+\vspace{-0.2em}
+\begin{tabularx}{\linewidth}{|X|}
+\hline
+\textbf{8.} $\nabla \times (\nabla f) = \mathbf{0}$ (El rotacional de un gradiente es estrictamente cero) \\
+\textbf{9.} $\nabla \cdot (\nabla \times \mathbf{F}) = 0$ (La divergencia de un rotacional es estrictamente cero) \\
+\textbf{10.} $\nabla \times (\nabla \times \mathbf{F}) = \nabla(\nabla \cdot \mathbf{F}) - \nabla^2\mathbf{F}$ (Identidad del doble rotacional) \\
+\textbf{11.} $\nabla \cdot (\phi \mathbf{F}) = \phi(\nabla \cdot \mathbf{F}) + \mathbf{F} \cdot (\nabla \phi)$ (Regla del producto para la divergencia) \\
+\textbf{12.} $\nabla \times (\phi \mathbf{F}) = \phi(\nabla \times \mathbf{F}) + (\nabla \phi) \times \mathbf{F}$ (Regla del producto para el rotacional) \\
+\textbf{13.} $\nabla \cdot (\mathbf{A} \times \mathbf{B}) = \mathbf{B} \cdot (\nabla \times \mathbf{A}) - \mathbf{A} \cdot (\nabla \times \mathbf{B})$ \\
+\hline
+\end{tabularx}
+
+\newpage
+{\color{themeblue}\normalsize\bfseries C. Teoremas Integrales Fundamentales} \par
+\vspace{-0.2em}
+\begin{tabularx}{\linewidth}{|X|}
+\hline
+\textbf{14.} $W = \int_C \mathbf{F} \cdot d\mathbf{r} = \int_a^b \mathbf{F}(\mathbf{r}(t)) \cdot \mathbf{r}'(t) dt$ (Trabajo o Circulación) \\
+\textbf{15.} $\Phi = \iint_S \mathbf{F} \cdot \mathbf{n} \, dS$ (Flujo Superficial) \\
+\textbf{16.} $\mathbf{F} = \nabla f \implies \int_A^B \mathbf{F} \cdot d\mathbf{r} = f(B) - f(A)$ (Teorema Fund. de las Integrales de Línea) \\
+\textbf{17.} $\oint_C (P dx + Q dy) = \iint_D (Q_x - P_y) dA$ (Teorema de Green - Forma de Circulación) \\
+\textbf{18.} $\oint_C (-Q dx + P dy) = \iint_D (P_x + Q_y) dA$ (Teorema de Green - Forma de Flujo 2D) \\
+\textbf{19.} $\oint_{\partial S} \mathbf{F} \cdot d\mathbf{r} = \iint_S (\nabla \times \mathbf{F}) \cdot d\mathbf{S}$ (Teorema de Stokes: frontera a superficie) \\
+\textbf{20.} $\oiint_{\partial V} \mathbf{F} \cdot d\mathbf{S} = \iiint_V (\nabla \cdot \mathbf{F}) dV$ (Teorema de Gauss: superficie cerrada a volumen) \\
+\textbf{21.} $\iiint_V (\phi\nabla^2\psi + \nabla\phi\cdot\nabla\psi)dV = \oiint_{\partial V} \phi(\nabla\psi\cdot\mathbf{n})dS$ (Primera Identidad de Green) \\
+\textbf{22.} $\iiint_V (\phi\nabla^2\psi - \psi\nabla^2\phi)dV = \oiint_{\partial V} (\phi\nabla\psi - \psi\nabla\phi)\cdot\mathbf{n} dS$ (Segunda Identidad de Green) \\
+\textbf{23.} $\text{Área} = \frac{1}{2} \oint_C (x dy - y dx) = \oint_C x dy = -\oint_C y dx$ (Área mediante el Teorema de Green) \\
+\hline
+\end{tabularx}
+
+\vspace{0.6em}
+{\color{themeblue}\normalsize\bfseries D. Ahorro de Tiempo: Diferenciales y Jacobianos} \par
+\vspace{-0.2em}
+\begin{tabularx}{\linewidth}{|X|}
+\hline
+\textbf{24. Esfera (radio $a$):} $d\mathbf{S} = \hat{r} \, a^2 \sin\phi \, d\phi \, d\theta$. Jacobiano $|J| = r^2\sin\phi$ \\
+\textbf{25. Cilindro (radio $a$):} $d\mathbf{S} = \hat{\rho} \, a \, dz \, d\theta$. Jacobiano $|J| = \rho$ \\
+\textbf{26. Gráfica $z = f(x,y)$:} $d\mathbf{S} = \pm \langle -f_x, -f_y, 1 \rangle dA \implies dS = \sqrt{f_x^2 + f_y^2 + 1} \, dA$ \\
+\textbf{27. Recta Normal a $F=k$:} $\mathbf{r}(t) = \mathbf{r}_0 + t\nabla F(\mathbf{r}_0)$ \\
+\hline
+\end{tabularx}
+
+\vspace{0.6em}
+{\color{themeblue}\normalsize\bfseries E. Errores Comunes y Comprobaciones Rápidas} \par
+\vspace{-0.2em}
+\begin{tabularx}{\linewidth}{|X|}
+\hline
+\textbf{28. Orientación de Stokes (RMD):} Si camina a lo largo de $\partial S$ con la cabeza alineada con la normal $\mathbf{n}$, la superficie $S$ debe quedar a su izquierda. \\
+\textbf{29. Campo Conservativo:} $\mathbf{F} = \nabla \phi \iff \nabla \times \mathbf{F} = \mathbf{0}$ (Irrotacional). \\
+\textbf{30. Potencial Vectorial:} $\mathbf{F} = \nabla \times \mathbf{A} \iff \nabla \cdot \mathbf{F} = 0$ (Solenoidal). \textit{Consejo: ¡Use Stokes para encontrar el flujo de un campo solenoidal sobre superficies abiertas!} \\
+\hline
+\end{tabularx}
+
+\end{document}
